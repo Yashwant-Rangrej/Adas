@@ -57,26 +57,25 @@ sudo apt update
 sudo apt install ros-humble-ros-base
 ```
 
-### Phase 3: Clone the Repository
-Since the code is hosted on GitHub, you can clone it directly to your Pi:
-```bash
-sudo apt install git -y
-cd ~
-git clone https://github.com/Yashwant-Rangrej/Adas.git
-cd Adas/adas
-```
+### Phase 3: Transfer the Code
+1. Copy your `adas` folder to a USB Flash Drive.
+2. Plug the USB Drive into the Raspberry Pi.
+3. Drag and drop the `adas` folder onto the Raspberry Pi's Desktop.
 
 ### Phase 4: Install Dependencies & Run
-Now that you are in the project folder, run the setup scripts:
+Open a terminal on the Raspberry Pi, navigate into the folder, and run the setup scripts:
 
 ```bash
-# 1. Make the scripts executable (only need to do this once)
+# 1. Navigate to the folder
+cd ~/Desktop/adas
+
+# 2. Make the scripts executable (only need to do this once)
 chmod +x setup.sh run.sh
 
-# 2. Run the setup script to install OpenCV and Numpy
+# 3. Run the setup script to install OpenCV and Numpy
 ./setup.sh
 
-# 3. Start the ADAS system!
+# 4. Start the ADAS system!
 ./run.sh
 ```
 
