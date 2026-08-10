@@ -5,15 +5,33 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy
-from ros_robot_controller_msgs.msg import SetPWMServoState, PWMServoState
+try:
+    from ros_robot_controller_msgs.msg import SetPWMServoState, PWMServoState
+    YAHBOOM_MSGS_AVAILABLE = True
+except ImportError:
+    print("WARNING: ros_robot_controller_msgs not found. Servo commands via ROS will be ignored.")
+    YAHBOOM_MSGS_AVAILABLE = False
+
+from gpiozero import Servo
 
 class MentorPiHardware(Node):
     def __init__(self):
         super().__init__('custom_line_follower_hardware')
         
         # Publishers
-        self.pwm_pub = self.create_publisher(SetPWMServoState, 'ros_robot_controller/pwm_servo/set_state', 10)
+        if YAHBOOM_MSGS_AVAILABLE:
+            self.pwm_pub = self.create_publisher(SetPWMServoState, 'ros_robot_controller/pwm_servo/set_state', 10)
+        else:
+            self.pwm_pub = None
+            
         self.cmd_vel_pub = self.create_publisher(Twist, '/controller/cmd_vel', 1)
+        
+        # Hardware GPIO Servo (Directly plugged into Raspberry Pi)
+        try:
+            self.gpio_servo = Servo(18)
+        except Exception as e:
+            print(f"Failed to initialize GPIO Servo: {e}")
+            self.gpio_servo = None
         
         # Lidar Subscriber for Obstacle Detection
         qos = QoSProfile(depth=1, reliability=QoSReliabilityPolicy.BEST_EFFORT)
@@ -52,6 +70,17 @@ class MentorPiHardware(Node):
                 self.obstacle_detected = False
 
     def set_servo(self, servo_id, position, duration=0.2):
+        # Hardware GPIO Control
+        if servo_id == 1 and self.gpio_servo:
+            # Map Yahboom PWM (1200 to 1800) to gpiozero (-1.0 to 1.0)
+            val = (position - 1500) / 500.0
+            val = max(min(val, 1.0), -1.0) # Clamp between -1.0 and 1.0
+            self.gpio_servo.value = val
+            
+        # Optional: Send to Yahboom ROS Driver (if installed)
+        if not YAHBOOM_MSGS_AVAILABLE:
+            return
+            
         msg = SetPWMServoState()
         msg.duration = float(duration)
         pos = PWMServoState()

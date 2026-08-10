@@ -3,9 +3,9 @@
 Welcome to the MentorPi ADAS project! This repository contains Python-based software to run an autonomous driving system on a Raspberry Pi (MentorPi hardware). The system utilizes OpenCV for vision processing and ROS 2 for hardware control.
 
 ## ✨ Features
-- **Lane Tracking:** Uses a camera to detect red lines and calculate steering angles to follow paths autonomously.
+- **Proportional Lane Tracking:** Uses a camera to detect lines and calculate precise dynamic steering angles (Gentle, Standard, Sharp) ranging from 5 to 45 degrees.
 - **Traffic Sign Recognition:** Uses ORB feature matching to detect traffic signs like STOP, LEFT, RIGHT, DEADEND, SLOW, and SPEED_LIMIT.
-- **Hardware Integration:** Communicates with MentorPi hardware via ROS 2 to control servos (steering) and DC motors (drive).
+- **Hardware Integration:** Communicates with MentorPi hardware via ROS 2 to control servos (Ackermann steering) and DC motors (drive).
 - **Obstacle Detection:** Stops automatically when an obstacle is detected by the hardware sensors.
 
 ## 📁 Project Structure
@@ -13,9 +13,10 @@ Welcome to the MentorPi ADAS project! This repository contains Python-based soft
 - `camera.py` - Handles capturing video frames from the USB/Pi camera.
 - `vision.py` - Processes images to find the track/line and calculates the center.
 - `signs.py` - Detects traffic signs using computer vision (ORB).
-- `steering.py` - Calculates steering commands based on line detection.
-- `drive.py` - Controls vehicle speed and stopping.
+- `steering.py` - Calculates proportional steering commands based on line detection error.
+- `drive.py` - Controls vehicle speed, seamlessly handling forward motion during turns.
 - `hardware.py` - ROS 2 node that communicates directly with the MentorPi hardware (motors/servos).
+- `test_servo.py` - Standalone hardware test script for the steering servo.
 - `setup.sh` / `run.sh` - Helper scripts for easy setup and execution.
 - `assets/` - Reference images for traffic sign detection.
 
@@ -70,15 +71,19 @@ Open a terminal on the Raspberry Pi, navigate into the folder, and run the setup
 cd ~/Desktop/Adas-1/adas
 
 # 2. Make the scripts executable (only need to do this once)
-chmod +x setup.sh run.sh
+chmod +x setup.sh run.sh test_servo.py main.py
 
 # 3. Run the setup script to install ROS 2 packages and Python dependencies
 ./setup.sh
 
-# 4. Start the ADAS system!
+# 4. (Recommended) Test the physical steering servo connection
+python3 test_servo.py
+
+# 5. Start the ADAS system!
 ./run.sh
 ```
 
 ## 🛠 Troubleshooting
 - **Camera Error:** Make sure your camera is properly connected. You might need to change `camera_index=0` in `main.py` if your camera mounts to a different `/dev/videoX` index.
+- **Hardware/Servo Errors:** Ensure your user has permissions to access the GPIO pins. Running `sudo python3 test_servo.py` or `./run.sh` with `sudo` might be necessary depending on your OS configuration.
 - **ROS Errors:** Make sure `setup.sh` correctly sourced your ROS installation.

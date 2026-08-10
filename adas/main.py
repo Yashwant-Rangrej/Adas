@@ -87,14 +87,14 @@ def main():
                     
             elif current_state == "FORCE_LEFT":
                 steering.hw.set_servo(steering.servo_id, 1800) # Hard Left
-                drive.hw.set_velocity(0.15, 1.0) 
+                drive.hw.set_velocity(0.15, 0.0) # Back wheels drive forward
                 cv2.putText(processed_frame, "ACTION: FORCE LEFT", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
                 if time.time() - state_start_time > 1.5:
                     current_state = "FOLLOW_LINE"
                     
             elif current_state == "FORCE_RIGHT":
                 steering.hw.set_servo(steering.servo_id, 1200) # Hard Right
-                drive.hw.set_velocity(0.15, -1.0)
+                drive.hw.set_velocity(0.15, 0.0) # Back wheels drive forward
                 cv2.putText(processed_frame, "ACTION: FORCE RIGHT", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
                 if time.time() - state_start_time > 1.5:
                     current_state = "FOLLOW_LINE"
