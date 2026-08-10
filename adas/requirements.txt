@@ -1,0 +1,6 @@
+opencv-python==4.8.0.76
+numpy==1.24.3
+
+# Note: rclpy, geometry_msgs, sensor_msgs, and ros_robot_controller_msgs 
+# are ROS 2 packages. They cannot be installed via pip in this file. 
+# They must be installed via apt-get or built from source in your ROS 2 workspace.
