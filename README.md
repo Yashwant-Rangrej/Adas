@@ -67,7 +67,7 @@ Open a terminal on the Raspberry Pi, navigate into the folder, and run the setup
 
 ```bash
 # 1. Navigate to the folder
-cd ~/Adas-1
+cd ~/Desktop/Adas-1/adas
 
 # 2. Make the scripts executable (only need to do this once)
 chmod +x setup.sh run.sh
