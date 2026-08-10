@@ -72,7 +72,7 @@ cd ~/Desktop/Adas-1/adas
 # 2. Make the scripts executable (only need to do this once)
 chmod +x setup.sh run.sh
 
-# 3. Run the setup script to install OpenCV and Numpy
+# 3. Run the setup script to install ROS 2 packages and Python dependencies
 ./setup.sh
 
 # 4. Start the ADAS system!
