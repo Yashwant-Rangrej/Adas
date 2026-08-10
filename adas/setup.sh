@@ -12,7 +12,12 @@ else
     echo "Warning: ROS 2 Humble setup.bash not found. Please ensure ROS 2 is installed."
 fi
 
-# 2. Install pip dependencies (OpenCV and Numpy)
+# 2. Install required ROS 2 packages
+echo "Installing ROS 2 dependencies..."
+sudo apt update
+sudo apt install -y ros-humble-geometry-msgs ros-humble-sensor-msgs ros-humble-ros-robot-controller-msgs
+
+# 3. Install pip dependencies (OpenCV and Numpy)
 echo "Installing Python dependencies..."
 # Ensure pip is installed on Ubuntu
 sudo apt install python3-pip -y
