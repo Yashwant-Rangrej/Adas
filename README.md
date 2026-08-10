@@ -58,6 +58,13 @@ sudo apt update
 sudo apt install ros-humble-ros-base
 ```
 
+**3. Setup Environment Variables**
+To automatically make ROS 2 commands available every time you open a terminal, run this command once:
+```bash
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
 ### Phase 3: Transfer the Code
 1. Copy your `Adas-1` folder to a USB Flash Drive.
 2. Plug the USB Drive into the Raspberry Pi.
