@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd "$(dirname "$0")" || exit
 echo "=== ADAS Environment Setup ==="
 
 # 1. Source the ROS 2 installation (Assuming Humble, change if using Foxy/Galactic)
