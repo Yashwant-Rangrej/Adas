@@ -14,6 +14,13 @@ except ImportError:
 
 from gpiozero import Servo
 
+class MockServo:
+    def __init__(self, p): pass
+    @property
+    def value(self): return 0.0
+    @value.setter
+    def value(self, v): pass
+
 class MentorPiHardware(Node):
     def __init__(self):
         super().__init__('custom_line_follower_hardware')
@@ -32,12 +39,6 @@ class MentorPiHardware(Node):
             self.gpio_servo = Servo(18)
         except Exception as e:
             print(f"Failed to initialize real GPIO Servo: {e}. Falling back to custom mock Servo.")
-            class MockServo:
-                def __init__(self, p): pass
-                @property
-                def value(self): return 0.0
-                @value.setter
-                def value(self, v): pass
             self.gpio_servo = MockServo(18)
         
         # Lidar Subscriber for Obstacle Detection

@@ -9,8 +9,10 @@ class Camera:
             print(f"Warning: Could not open camera at index {camera_index}. Using mock camera instead.")
             self.use_mock = True
         else:
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+            # Setting a universal MJPG format often helps prevent garbled frames on Linux
+            self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+            # We skip forcing hardware width/height here to avoid V4L2 buffer size bugs.
+            pass
             
         self.width = width
         self.height = height
@@ -25,7 +27,9 @@ class Camera:
         ret, frame = self.cap.read()
         if not ret:
             return None
-        return frame
+        
+        # Software resize guarantees the correct output dimensions without corrupting the camera driver's native buffer
+        return cv2.resize(frame, (self.width, self.height))
 
     def release(self):
         if not self.use_mock:
