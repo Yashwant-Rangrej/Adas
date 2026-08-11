@@ -25,6 +25,7 @@ class Camera:
             
             # Subscribe to all possible Angstrong/Orbbec topic namespaces just to be safe
             possible_topics = [
+                '/ascamera_hp60c/camera_publisher/rgb0/image', # <-- THE VERIFIED TOPIC!
                 '/ascamera_hp60c/camera_color/image_raw',
                 '/ascamera_hp60c/rgb/image_raw',
                 '/ascamera/camera_color/image_raw',
