@@ -24,73 +24,70 @@ Welcome to the MentorPi ADAS project! This repository contains Python-based soft
 
 ## 🚀 Getting Started
 
-Follow these steps to set up your Raspberry Pi and run the system.
+Follow these steps to set up your Raspberry Pi/Robot and run the ADAS system.
 
-### Phase 1: Install Ubuntu on the Raspberry Pi
-1. Download and open **Raspberry Pi Imager**.
-2. Select your device (e.g., Raspberry Pi 4).
-3. Under "Choose OS", go to **Other general-purpose OS** -> **Ubuntu** -> **Ubuntu 22.04 LTS (64-bit)**.
-4. Flash this to your SD card.
-5. Boot up the Raspberry Pi, connect it to a monitor, and connect to Wi-Fi.
-
-### Phase 2: Install ROS 2 (Humble)
-Open the terminal on your Raspberry Pi and run the following commands to install ROS 2:
-
-**1. Setup Locale and Sources**
-```bash
-sudo apt update && sudo apt install locales
-sudo locale-gen en_US en_US.UTF-8
-sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
-export LANG=en_US.UTF-8
-
-sudo apt install software-properties-common
-sudo add-apt-repository universe
-
-sudo apt update && sudo apt install curl -y
-sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-```
-
-**2. Install ROS 2 Core Packages**
+### Phase 1: Install Dependencies & ROS 2 Tools
+Open a terminal on your robot and install the required system libraries, vision packages, and the `colcon` build tool:
 ```bash
 sudo apt update
-sudo apt install ros-humble-ros-base
+sudo apt install -y python3-colcon-common-extensions libgflags-dev nlohmann-json3-dev libgoogle-glog-dev ros-humble-image-transport ros-humble-image-publisher ros-humble-pcl-conversions ros-humble-pcl-ros ros-humble-cv-bridge
 ```
 
-**3. Setup Environment Variables**
-To automatically make ROS 2 commands available every time you open a terminal, run this command once:
+### Phase 2: Install the 3D Camera SDK (Angstrong / Nuwa HP60C)
+Because 3D Depth cameras encrypt their data, you must install the manufacturer's ROS 2 SDK to extract the color video stream.
+1. Download the SDK to the robot's home folder:
+   ```bash
+   cd ~
+   git clone https://github.com/virensompura/ascam_ros2_ws.git
+   ```
+2. Grant Linux USB Permissions (UDEV Rules):
+   ```bash
+   cd ~/ascam_ros2_ws/src/ascamera/scripts
+   sudo bash create_udev_rules.sh
+   ```
+   **🚨 IMPORTANT:** Physically unplug the camera's USB cable from the robot and plug it back in so these permissions take effect!
+3. Compile the SDK:
+   ```bash
+   cd ~/ascam_ros2_ws
+   source /opt/ros/humble/setup.bash
+   colcon build --symlink-install
+   ```
+
+### Phase 3: Transfer the ADAS Code
+1. Copy the `Adas-1` folder from your PC to a USB Flash Drive.
+2. Plug the USB Drive into the robot.
+3. Drag and drop the `Adas-1` folder onto the robot's `Desktop`.
+
+### Phase 4: Run the System!
+This project uses a **Hybrid Camera System**. By default, it connects to the ROS 2 SDK. 
+
+To run the car, open **two** separate terminal windows on the robot:
+
+**Terminal 1 (Start the Camera SDK):**
 ```bash
-echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-source ~/.bashrc
+source /opt/ros/humble/setup.bash && source ~/ascam_ros2_ws/install/setup.bash && ros2 launch ascamera hp60c.launch.py
 ```
+*(Leave this running in the background. It talks to the USB port and publishes the video.)*
 
-### Phase 3: Transfer the Code
-1. Copy your `Adas-1` folder to a USB Flash Drive.
-2. Plug the USB Drive into the Raspberry Pi.
-3. Drag and drop the `Adas-1` folder into your Home directory (or wherever you prefer).
-
-### Phase 4: Install Dependencies & Run
-Open a terminal on the Raspberry Pi, navigate into the folder, and run the setup scripts:
-
+**Terminal 2 (Start ADAS):**
 ```bash
-# 1. Navigate to the folder
-cd ~/Desktop/Adas-1/adas
-
-# 2. Make the scripts executable (only need to do this once)
-chmod +x setup.sh run.sh test_servo.py main.py
-
-# 3. Run the setup script to install ROS 2 packages and Python dependencies
-./setup.sh
-
-# 4. (Recommended) Test the physical steering servo connection
-python3 test_servo.py
-
-# 5. Start the ADAS system!
-./run.sh
+source /opt/ros/humble/setup.bash && cd ~/Desktop/Adas-1/adas && ./run.sh
 ```
 
-## 🛠 Troubleshooting
-- **Camera Error:** Make sure your camera is properly connected. You might need to change `camera_index=0` in `main.py` if your camera mounts to a different `/dev/videoX` index.
-- **Hardware/Servo Errors:** Ensure your user has permissions to access the GPIO pins. Running `sudo python3 test_servo.py` or `./run.sh` with `sudo` might be necessary depending on your OS configuration.
-- **ROS Errors:** Make sure `setup.sh` correctly sourced your ROS installation.
+---
+
+## 🛠 Troubleshooting & Testing
+
+### "Waiting for SDK..." Error
+If you run `./run.sh` and the screen is black with red text saying "WAITING FOR SDK...", it means Terminal 2 cannot find the camera feed from Terminal 1. 
+- Make sure you ran the `ros2 launch` command in Terminal 1.
+- Make sure `ascamera` successfully built without errors.
+
+### Testing on a PC without the SDK (OpenCV Mode)
+If you want to test the ADAS logic on a Windows/Mac PC using a standard webcam (without installing the heavy ROS 2 SDK), you can use the built-in fallback mode:
+1. Run `python3 find_camera.py` to find your webcam's index number (e.g. `0` or `1`).
+2. Run the ADAS system and pass that number:
+   ```bash
+   ./run.sh 0
+   ```
+This instantly disables the SDK requirement and reads your webcam directly!

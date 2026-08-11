@@ -17,17 +17,22 @@ def main():
     rclpy.init()
     hardware = MentorPiHardware()
     
+    # Configuration
+    USE_SDK = True # Set to False if you want to use direct OpenCV testing on a PC
+    
     camera_idx = 0
     if len(sys.argv) > 1:
         try:
             camera_idx = int(sys.argv[1])
+            # If a number is provided via command line, assume they want to test direct OpenCV
+            USE_SDK = False 
         except ValueError:
             pass
             
-    print(f"Using camera index: {camera_idx}")
+    print(f"Camera Initialization (SDK Mode: {USE_SDK})")
     
     try:
-        cam = Camera(camera_index=camera_idx)
+        cam = Camera(use_sdk=USE_SDK, node=hardware, camera_index=camera_idx)
     except Exception as e:
         print("Camera Error:", e)
         hardware.destroy_node()
