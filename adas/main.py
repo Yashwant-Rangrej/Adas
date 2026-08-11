@@ -1,6 +1,8 @@
 import cv2
 import rclpy
 import time
+import os
+import sys
 from camera import Camera
 from vision import LineDetector
 from hardware import MentorPiHardware
@@ -15,8 +17,17 @@ def main():
     rclpy.init()
     hardware = MentorPiHardware()
     
+    camera_idx = 0
+    if len(sys.argv) > 1:
+        try:
+            camera_idx = int(sys.argv[1])
+        except ValueError:
+            pass
+            
+    print(f"Using camera index: {camera_idx}")
+    
     try:
-        cam = Camera(camera_index=0)
+        cam = Camera(camera_index=camera_idx)
     except Exception as e:
         print("Camera Error:", e)
         hardware.destroy_node()
@@ -28,7 +39,10 @@ def main():
     drive = DriveController(hardware)
     sign_detector = SignDetector()
     
-    print("System running! Press 'q' to quit.")
+    print("System running! Press 'q' to quit (if display is active).")
+    
+    # Check if a monitor is attached so we don't crash when running on boot
+    has_display = bool(os.environ.get('DISPLAY'))
     
     # State machine variables
     current_state = "FOLLOW_LINE"
@@ -108,12 +122,13 @@ def main():
                     drive.move(direction)
                     cv2.putText(processed_frame, f"LINE TRACKING: {direction}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
                     
-            # Display results
-            cv2.imshow('Camera Feed', processed_frame)
-            cv2.imshow('Red Mask', mask)
-            
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+            # Display results if a screen is attached
+            if has_display:
+                cv2.imshow('Camera Feed', processed_frame)
+                cv2.imshow('Red Mask', mask)
+                
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
                 
     finally:
         drive.stop()
