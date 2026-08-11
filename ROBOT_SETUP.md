@@ -47,7 +47,9 @@ colcon build --symlink-install
 
 ---
 
-### Phase 6: Run the ADAS System!
+### Phase 6: Run the ADAS System! (Daily Routine)
+*(Note: Phases 1 through 5 only need to be done **exactly once**! The `colcon build` command permanently compiles the software. From tomorrow onwards, you only ever need to run the Terminal 1 and Terminal 2 commands in Phase 6!)*
+
 *(Make sure you have copied the `Adas-1` folder from your PC onto the robot's `Desktop` before running this!)*
 
 To run the car, you must open **two separate terminal windows** on the robot.

@@ -64,7 +64,9 @@ Because 3D Depth cameras encrypt their data, you must install the manufacturer's
 2. Plug the USB Drive into the robot.
 3. Drag and drop the `Adas-1` folder onto the robot's `Desktop` folder (so the path becomes `~/Desktop/Adas-1`).
 
-### Phase 4: Run the System!
+### Phase 4: Run the System! (Daily Routine)
+*(Note: Phases 1, 2, and 3 only need to be done **exactly once** during initial setup. From tomorrow onwards, you only ever need to run Phase 4!)*
+
 This project uses a **Hybrid Camera System**. By default, it connects to the ROS 2 SDK. 
 
 To run the car, open **two** separate terminal windows on the robot:
