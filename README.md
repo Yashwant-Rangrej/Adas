@@ -41,13 +41,18 @@ Because 3D Depth cameras encrypt their data, you must install the manufacturer's
    cd ~
    git clone https://github.com/virensompura/ascam_ros2_ws.git
    ```
-2. **Directory:** Navigate into the newly downloaded scripts folder to grant USB permissions:
+2. **Directory:** Any directory is fine. **Patch the Hardcoded Username Bug:**
+   ```bash
+   find ~/ascam_ros2_ws/src/ascamera -type f -exec sed -i 's|/home/admin1|/home/ats|g' {} +
+   ```
+   *(The manufacturer hardcoded `admin1` into their code. This changes it to `ats` so it doesn't crash).*
+3. **Directory:** Navigate into the newly downloaded scripts folder to grant USB permissions:
    ```bash
    cd ~/ascam_ros2_ws/src/ascamera/scripts
    sudo bash create_udev_rules.sh
    ```
    **🚨 IMPORTANT:** Physically unplug the camera's USB cable from the robot and plug it back in so these permissions take effect!
-3. **Directory:** Navigate to the root of the workspace to compile the SDK:
+4. **Directory:** Navigate to the root of the workspace to compile the SDK:
    ```bash
    cd ~/ascam_ros2_ws
    source /opt/ros/humble/setup.bash
