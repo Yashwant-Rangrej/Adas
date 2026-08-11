@@ -14,7 +14,7 @@ fi
 # 2. Install required ROS 2 packages
 echo "Installing ROS 2 dependencies..."
 sudo apt update
-sudo apt install -y ros-humble-geometry-msgs ros-humble-sensor-msgs ros-humble-ros-robot-controller-msgs
+sudo apt install -y ros-humble-geometry-msgs ros-humble-sensor-msgs
 
 # 3. Install pip dependencies (OpenCV, Numpy, and GPIO)
 echo "Installing Python dependencies..."
@@ -23,7 +23,7 @@ sudo apt install python3-pip python3-gpiozero -y
 
 # Use --break-system-packages for newer Ubuntu/Debian versions (like Raspberry Pi OS Bookworm)
 # If it fails, it will fall back to standard pip install
-pip3 install -r requirements.txt --break-system-packages || pip3 install -r requirements.txt
+pip3 install -r requirements.txt
 
 # Ensure run and test scripts are executable
 chmod +x run.sh test_servo.py main.py

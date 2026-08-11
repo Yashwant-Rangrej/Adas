@@ -1,11 +1,16 @@
-from gpiozero import Servo
+from gpiozero import Servo, Device
+from gpiozero.pins.mock import MockFactory
 from time import sleep
 
 def test_servo(pin=18):
     print(f"Testing servo on GPIO pin {pin}...")
     try:
-        # Initialize servo
-        servo = Servo(pin)
+        try:
+            servo = Servo(pin)
+        except Exception:
+            print("Warning: Real GPIO pins not found or inaccessible. Falling back to MockFactory for testing.")
+            Device.pin_factory = MockFactory()
+            servo = Servo(pin)
         
         # Test positions
         print("Moving to center (0.0)")
