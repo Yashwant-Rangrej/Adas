@@ -4,12 +4,13 @@ from sensor_msgs.msg import Image
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
 class Camera:
-    def __init__(self, use_sdk=False, node=None, topic_name='/ascamera/camera_color/image_raw', camera_index=0, width=320, height=240):
+    def __init__(self, use_sdk=False, node=None, topic_name=None, camera_index=0, width=320, height=240):
         self.use_sdk = use_sdk
         self.width = width
         self.height = height
         self.latest_frame = None
         self.use_mock = False
+        self.subs = []
 
         if self.use_sdk:
             if node is None:
@@ -21,8 +22,20 @@ class Camera:
                 history=QoSHistoryPolicy.KEEP_LAST,
                 depth=1
             )
-            self.sub = self.node.create_subscription(Image, topic_name, self.image_callback, qos_profile)
-            print(f"Camera configured for SDK mode (Topic: {topic_name})")
+            
+            # Subscribe to all possible Angstrong/Orbbec topic namespaces just to be safe
+            possible_topics = [
+                '/ascamera_hp60c/camera_color/image_raw',
+                '/ascamera_hp60c/rgb/image_raw',
+                '/ascamera/camera_color/image_raw',
+                '/ascamera/rgb/image_raw',
+                '/camera/color/image_raw'
+            ]
+            
+            for t in possible_topics:
+                self.subs.append(self.node.create_subscription(Image, t, self.image_callback, qos_profile))
+                
+            print(f"Camera configured for SDK mode (Listening to {len(possible_topics)} possible topics)")
         else:
             self.cap = cv2.VideoCapture(camera_index)
             if not self.cap.isOpened():
