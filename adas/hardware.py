@@ -12,8 +12,7 @@ except ImportError:
     print("WARNING: ros_robot_controller_msgs not found. Servo commands via ROS will be ignored.")
     YAHBOOM_MSGS_AVAILABLE = False
 
-from gpiozero import Servo, Device
-from gpiozero.pins.mock import MockFactory
+from gpiozero import Servo
 
 class MentorPiHardware(Node):
     def __init__(self):
@@ -29,11 +28,17 @@ class MentorPiHardware(Node):
         
         # Hardware GPIO Servo (Directly plugged into Raspberry Pi)
         try:
+            from gpiozero import Servo
             self.gpio_servo = Servo(18)
         except Exception as e:
-            print(f"Failed to initialize real GPIO Servo: {e}. Falling back to mock GPIO.")
-            Device.pin_factory = MockFactory()
-            self.gpio_servo = Servo(18)
+            print(f"Failed to initialize real GPIO Servo: {e}. Falling back to custom mock Servo.")
+            class MockServo:
+                def __init__(self, p): pass
+                @property
+                def value(self): return 0.0
+                @value.setter
+                def value(self, v): pass
+            self.gpio_servo = MockServo(18)
         
         # Lidar Subscriber for Obstacle Detection
         qos = QoSProfile(depth=1, reliability=QoSReliabilityPolicy.BEST_EFFORT)
