@@ -27,7 +27,8 @@ Welcome to the MentorPi ADAS project! This repository contains Python-based soft
 Follow these steps to set up your Raspberry Pi/Robot and run the ADAS system.
 
 ### Phase 1: Install Dependencies & ROS 2 Tools
-Open a terminal on your robot and install the required system libraries, vision packages, and the `colcon` build tool:
+**Directory:** Open a brand new terminal. It does not matter which directory you are in.
+Run this to install the required system libraries, vision packages, and the `colcon` build tool:
 ```bash
 sudo apt update
 sudo apt install -y python3-colcon-common-extensions libgflags-dev nlohmann-json3-dev libgoogle-glog-dev ros-humble-image-transport ros-humble-image-publisher ros-humble-pcl-conversions ros-humble-pcl-ros ros-humble-cv-bridge
@@ -35,18 +36,18 @@ sudo apt install -y python3-colcon-common-extensions libgflags-dev nlohmann-json
 
 ### Phase 2: Install the 3D Camera SDK (Angstrong / Nuwa HP60C)
 Because 3D Depth cameras encrypt their data, you must install the manufacturer's ROS 2 SDK to extract the color video stream.
-1. Download the SDK to the robot's home folder:
+1. **Directory:** Navigate to your Home folder to download the SDK:
    ```bash
    cd ~
    git clone https://github.com/virensompura/ascam_ros2_ws.git
    ```
-2. Grant Linux USB Permissions (UDEV Rules):
+2. **Directory:** Navigate into the newly downloaded scripts folder to grant USB permissions:
    ```bash
    cd ~/ascam_ros2_ws/src/ascamera/scripts
    sudo bash create_udev_rules.sh
    ```
    **🚨 IMPORTANT:** Physically unplug the camera's USB cable from the robot and plug it back in so these permissions take effect!
-3. Compile the SDK:
+3. **Directory:** Navigate to the root of the workspace to compile the SDK:
    ```bash
    cd ~/ascam_ros2_ws
    source /opt/ros/humble/setup.bash
@@ -56,7 +57,7 @@ Because 3D Depth cameras encrypt their data, you must install the manufacturer's
 ### Phase 3: Transfer the ADAS Code
 1. Copy the `Adas-1` folder from your PC to a USB Flash Drive.
 2. Plug the USB Drive into the robot.
-3. Drag and drop the `Adas-1` folder onto the robot's `Desktop`.
+3. Drag and drop the `Adas-1` folder onto the robot's `Desktop` folder (so the path becomes `~/Desktop/Adas-1`).
 
 ### Phase 4: Run the System!
 This project uses a **Hybrid Camera System**. By default, it connects to the ROS 2 SDK. 
@@ -64,14 +65,18 @@ This project uses a **Hybrid Camera System**. By default, it connects to the ROS
 To run the car, open **two** separate terminal windows on the robot:
 
 **Terminal 1 (Start the Camera SDK):**
+**Directory:** Navigate to your Home folder (or run it from anywhere):
 ```bash
+cd ~
 source /opt/ros/humble/setup.bash && source ~/ascam_ros2_ws/install/setup.bash && ros2 launch ascamera hp60c.launch.py
 ```
 *(Leave this running in the background. It talks to the USB port and publishes the video.)*
 
 **Terminal 2 (Start ADAS):**
+**Directory:** You **MUST** navigate into the `adas` folder inside your project!
 ```bash
-source /opt/ros/humble/setup.bash && cd ~/Desktop/Adas-1/adas && ./run.sh
+cd ~/Desktop/Adas-1/adas
+source /opt/ros/humble/setup.bash && ./run.sh
 ```
 
 ---
