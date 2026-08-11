@@ -17,17 +17,9 @@ def main():
     rclpy.init()
     hardware = MentorPiHardware()
     
-    camera_idx = 0
-    if len(sys.argv) > 1:
-        try:
-            camera_idx = int(sys.argv[1])
-        except ValueError:
-            pass
-            
-    print(f"Using camera index: {camera_idx}")
-    
+    # We pass the hardware node so the Camera class can subscribe to the ROS image topic
     try:
-        cam = Camera(camera_index=camera_idx)
+        cam = Camera(node=hardware, topic_name='/ascamera/camera_color/image_raw')
     except Exception as e:
         print("Camera Error:", e)
         hardware.destroy_node()
