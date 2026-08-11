@@ -9,8 +9,6 @@ class Camera:
             print(f"Warning: Could not open camera at index {camera_index}. Using mock camera instead.")
             self.use_mock = True
         else:
-            # Setting a universal MJPG format often helps prevent garbled frames on Linux
-            self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
             # We skip forcing hardware width/height here to avoid V4L2 buffer size bugs.
             pass
             
