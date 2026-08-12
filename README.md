@@ -83,7 +83,7 @@ source /opt/ros/humble/setup.bash && source ~/ascam_ros2_ws/install/setup.bash &
 **Directory:** You **MUST** navigate into the `adas` folder inside your project!
 ```bash
 cd ~/Desktop/Adas-1/adas
-source /opt/ros/humble/setup.bash && ./run.sh
+source /opt/ros/humble/setup.bash && sudo -E ./run.sh
 ```
 
 ---
