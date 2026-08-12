@@ -69,7 +69,7 @@ Because 3D Depth cameras encrypt their data, you must install the manufacturer's
 
 This project uses a **Hybrid Camera System**. By default, it connects to the ROS 2 SDK. 
 
-To run the car, open **two** separate terminal windows on the robot:
+To run the car, open **three** separate terminal windows on the robot:
 
 **Terminal 1 (Start the Camera SDK):**
 **Directory:** Navigate to your Home folder (or run it from anywhere):
@@ -77,14 +77,24 @@ To run the car, open **two** separate terminal windows on the robot:
 cd ~
 source /opt/ros/humble/setup.bash && source ~/ascam_ros2_ws/install/setup.bash && ros2 launch ascamera hp60c.launch.py
 ```
-*(Leave this running in the background. It talks to the USB port and publishes the video.)*
+*(Leave this running in the background. It talks to the USB port and goes into Power-Saving Lazy Streaming mode.)*
 
-**Terminal 2 (Start ADAS):**
+**Terminal 2 (Start the Motor Driver):**
+**Directory:** You **MUST** navigate into the `adas` folder inside your project!
+```bash
+cd ~/Desktop/Adas-1/adas
+source ~/ros2_ws/install/setup.bash
+ros2 launch ./motor_driver.launch.py
+```
+*(This wakes up the robot's physical wheels so they can receive drive commands).*
+
+**Terminal 3 (Start ADAS):**
 **Directory:** You **MUST** navigate into the `adas` folder inside your project!
 ```bash
 cd ~/Desktop/Adas-1/adas
 source /opt/ros/humble/setup.bash && sudo -E ./run.sh
 ```
+*(This uses `sudo -E` to get Administrator permissions for the steering servo, and tells the motor driver how fast to spin the wheels).*
 
 ---
 
