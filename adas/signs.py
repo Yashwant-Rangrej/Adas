@@ -80,7 +80,7 @@ class SignDetector:
                 best_match = sign_name
                 
         # If we have a solid number of matching features (heuristic threshold)
-        if max_good_matches > 15:
+        if max_good_matches > 30:
             # Set a cooldown of roughly 30 frames (about 1 second)
             self.cooldown = 30
             return best_match
