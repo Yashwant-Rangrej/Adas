@@ -35,13 +35,9 @@ class MentorPiHardware(Node):
             
         self.cmd_vel_pub = self.create_publisher(Twist, '/controller/cmd_vel', 1)
         
-        # Hardware GPIO Servo (Directly plugged into Raspberry Pi)
-        try:
-            from gpiozero import Servo
-            self.gpio_servo = Servo(18)
-        except Exception as e:
-            print(f"Failed to initialize real GPIO Servo: {e}. Falling back to custom mock Servo.")
-            self.gpio_servo = MockServo(18)
+        # Hardware GPIO Servo has been disabled to prevent USB Mouse crashes.
+        # The steering is now completely handled by the MentorPi expansion board natively!
+        self.gpio_servo = None
         
         # Lidar Subscriber for Obstacle Detection
         qos = QoSProfile(depth=1, reliability=QoSReliabilityPolicy.BEST_EFFORT)
@@ -80,12 +76,6 @@ class MentorPiHardware(Node):
                 self.obstacle_detected = False
 
     def set_servo(self, servo_id, position, duration=0.2):
-        # Hardware GPIO Control
-        if servo_id == 1 and self.gpio_servo:
-            # Map Yahboom PWM (1200 to 1800) to gpiozero (-1.0 to 1.0)
-            val = (position - 1500) / 500.0
-            val = max(min(val, 1.0), -1.0) # Clamp between -1.0 and 1.0
-            self.gpio_servo.value = val
             
         # Optional: Send to Yahboom ROS Driver (if installed)
         if not YAHBOOM_MSGS_AVAILABLE:

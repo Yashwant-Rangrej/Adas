@@ -92,9 +92,9 @@ ros2 launch ./motor_driver.launch.py
 **Directory:** You **MUST** navigate into the `adas` folder inside your project!
 ```bash
 cd ~/Desktop/Adas-1/adas
-source /opt/ros/humble/setup.bash && sudo -E ./run.sh
+source /opt/ros/humble/setup.bash && ./run.sh
 ```
-*(This uses `sudo -E` to get Administrator permissions for the steering servo, and tells the motor driver how fast to spin the wheels).*
+*(This tells the motor driver how fast to spin the wheels and where to steer the servo).*
 
 ---
 

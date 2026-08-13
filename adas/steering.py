@@ -3,7 +3,7 @@ import numpy as np
 class SteeringController:
     def __init__(self, hardware):
         self.hw = hardware
-        self.servo_id = 1 # Assuming the front steering servo is plugged into ID 1
+        self.servo_id = 3 # The front steering servo is officially plugged into port S3 on RRC Lite
         
         # Center the servo initially (1500 is center)
         self.hw.set_servo(self.servo_id, 1500, duration=0.5)
