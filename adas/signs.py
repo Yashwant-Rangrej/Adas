@@ -67,20 +67,20 @@ class SignDetector:
             # knnMatch gets the top 2 matches for each descriptor
             matches = self.bf.knnMatch(des_ref, des_frame, k=2)
             
-            # Apply Lowe's ratio test to filter out bad matches
+            # Apply Lowe's ratio test to filter out bad matches (tightened to 0.70 for stricter matching)
             good_matches = []
             for m_n in matches:
                 if len(m_n) == 2:
                     m, n = m_n
-                    if m.distance < 0.75 * n.distance:
+                    if m.distance < 0.70 * n.distance:
                         good_matches.append(m)
             
             if len(good_matches) > max_good_matches:
                 max_good_matches = len(good_matches)
                 best_match = sign_name
                 
-        # If we have a solid number of matching features (heuristic threshold)
-        if max_good_matches > 30:
+        # If we have a solid number of matching features (heuristic threshold increased to 45 to prevent false positives)
+        if max_good_matches > 45:
             # Set a cooldown of roughly 30 frames (about 1 second)
             self.cooldown = 30
             return best_match

@@ -1,6 +1,4 @@
 import rclpy
-import os
-os.environ['GPIOZERO_PIN_FACTORY'] = 'pigpio'
 import math
 import numpy as np
 from rclpy.node import Node
@@ -13,8 +11,6 @@ try:
 except ImportError:
     print("WARNING: ros_robot_controller_msgs not found. Servo commands via ROS will be ignored.")
     YAHBOOM_MSGS_AVAILABLE = False
-
-from gpiozero import Servo
 
 class MockServo:
     def __init__(self, p): pass
@@ -33,10 +29,11 @@ class MentorPiHardware(Node):
         else:
             self.pwm_pub = None
             
-        self.cmd_vel_pub = self.create_publisher(Twist, '/controller/cmd_vel', 1)
+        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 1)
+        self.cmd_vel_pub_alt = self.create_publisher(Twist, '/controller/cmd_vel', 1)
         
         # Hardware GPIO Servo has been disabled to prevent USB Mouse crashes.
-        # The steering is now completely handled by the MentorPi expansion board natively!
+        # The steering is now completely handl ed by the MentorPi expansion board natively!
         self.gpio_servo = None
         
         # Lidar Subscriber for Obstacle Detection
@@ -94,3 +91,4 @@ class MentorPiHardware(Node):
         twist.linear.x = float(linear_x)
         twist.angular.z = float(angular_z)
         self.cmd_vel_pub.publish(twist)
+        self.cmd_vel_pub_alt.publish(twist)

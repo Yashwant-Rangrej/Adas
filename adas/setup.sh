@@ -18,8 +18,8 @@ sudo apt install -y ros-humble-geometry-msgs ros-humble-sensor-msgs
 
 # 3. Install pip dependencies (OpenCV, Numpy, and GPIO)
 echo "Installing Python dependencies..."
-# Ensure pip and gpiozero are installed on Ubuntu/Debian
-sudo apt install python3-pip python3-gpiozero -y
+# Ensure pip is installed on Ubuntu/Debian
+sudo apt install python3-pip -y
 
 # Use --break-system-packages for newer Ubuntu/Debian versions (like Raspberry Pi OS Bookworm)
 # If it fails, it will fall back to standard pip install
