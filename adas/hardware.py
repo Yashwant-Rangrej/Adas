@@ -1,4 +1,6 @@
 import rclpy
+import os
+os.environ['GPIOZERO_PIN_FACTORY'] = 'pigpio'
 import math
 import numpy as np
 from rclpy.node import Node
