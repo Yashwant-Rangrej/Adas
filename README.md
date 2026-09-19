@@ -60,9 +60,9 @@ Because 3D Depth cameras encrypt their data, you must install the manufacturer's
    ```
 
 ### Phase 3: Transfer the ADAS Code
-1. Copy the `Adas-1` folder from your PC to a USB Flash Drive.
+1. Copy the `Adas` folder from your PC to a USB Flash Drive.
 2. Plug the USB Drive into the robot.
-3. Drag and drop the `Adas-1` folder onto the robot's `Desktop` folder (so the path becomes `~/Desktop/Adas-1`).
+3. Drag and drop the `Adas` folder onto the robot's `Desktop` folder (so the path becomes `~/Desktop/Adas`).
 
 ### Phase 4: Run the System! (Daily Routine)
 *(Note: Phases 1, 2, and 3 only need to be done **exactly once** during initial setup. From tomorrow onwards, you only ever need to run Phase 4!)*
@@ -82,7 +82,7 @@ source /opt/ros/humble/setup.bash && source ~/ascam_ros2_ws/install/setup.bash &
 **Terminal 2 (Start the Motor Driver):**
 **Directory:** You **MUST** navigate into the `adas` folder inside your project!
 ```bash
-cd ~/Desktop/Adas-1/adas
+cd ~/Desktop/Adas/adas
 source ~/ros2_ws/install/setup.bash
 ros2 launch ./motor_driver.launch.py
 ```
@@ -91,7 +91,7 @@ ros2 launch ./motor_driver.launch.py
 **Terminal 3 (Start ADAS):**
 **Directory:** You **MUST** navigate into the `adas` folder inside your project!
 ```bash
-cd ~/Desktop/Adas-1/adas
+cd ~/Desktop/Adas/adas
 source /opt/ros/humble/setup.bash && ./run.sh
 ```
 *(This tells the motor driver how fast to spin the wheels and where to steer the servo).*
