@@ -78,6 +78,10 @@ class MentorPiHardware(Node):
         if not YAHBOOM_MSGS_AVAILABLE:
             return
             
+        # SAFETY CLAMP: Never exceed physical tie-rod limits (1050 to 1950)
+        # Prevents continuous locked-rotor stall and servo destruction
+        position = max(1050, min(1950, int(position)))
+            
         msg = SetPWMServoState()
         msg.duration = float(duration)
         pos = PWMServoState()

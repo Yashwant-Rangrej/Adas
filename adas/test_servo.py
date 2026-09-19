@@ -36,12 +36,12 @@ def test_servo(servo_id=3):
         tester.set_servo(servo_id, 1500)
         time.sleep(1.5)
         
-        print("Moving to right (1000)")
-        tester.set_servo(servo_id, 1000)
+        print("Turning Right (1100us)...")
+        tester.set_servo(servo_id, 1100)
         time.sleep(1.5)
         
-        print("Moving to left (2000)")
-        tester.set_servo(servo_id, 2000)
+        print("Turning Left (1900us)...")
+        tester.set_servo(servo_id, 1900)
         time.sleep(1.5)
         
         print("Moving back to center (1500)")
